@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Contact Us</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/weatherforecast.css" rel="stylesheet">
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body>
+    <div class="bg-gray-900 min-h-screen flex justify-between flex-col">
+        <header class="absolute inset-x-0 top-0 z-50">
+    <nav aria-label="Global" class="flex items-center justify-between p-6 lg:px-8">
+      <div class="flex lg:flex-1">
+        <a href="/" class="-m-1.5 p-1.5">
+          <span class="sr-only">SkyCast</span>
+          <img src="https://imgs.search.brave.com/b_lwfe2ndckFu4G3V7Uca32H46oqdm7W58HqYJIxaqY/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4t/aWNvbnMtcG5nLmZs/YXRpY29uLmNvbS8x/MjgvMTg4OC8xODg4/MjgyLnBuZw" alt="" class="h-8 w-auto" />
+        </a>
+      </div>
+      <div class="flex lg:hidden">
+        <button type="button" command="show-modal" commandfor="mobile-menu" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-200">
+          <span class="sr-only">Open main menu</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
+            <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+      </div>
+      <div class="hidden lg:flex lg:gap-x-12">
+        <a href="/" class="text-sm/6 font-semibold text-white">Home</a>
+        <a href="/forecast.html" class="text-sm/6 font-semibold text-white">Weather Forecast</a>
+        <a href="/about.html" class="text-sm/6 font-semibold text-white">About</a>
+        <a href="/contact.html" class="text-sm/6 font-semibold text-white">Contact Us</a>
+      </div>
+      <div class="hidden lg:flex lg:flex-1 lg:justify-end">
+        <a href="#" class="text-sm/6 font-semibold text-white">Theme <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </nav>
+    <el-dialog>
+      <dialog id="mobile-menu" class="backdrop:bg-transparent lg:hidden">
+        <div tabindex="0" class="fixed inset-0 focus:outline-none">
+          <el-dialog-panel class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-900 p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-100/10">
+            <div class="flex items-center justify-between">
+              <a href="#" class="-m-1.5 p-1.5">
+                <span class="sr-only">SkyCast</span>
+                <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="" class="h-8 w-auto" />
+              </a>
+              <button type="button" command="close" commandfor="mobile-menu" class="-m-2.5 rounded-md p-2.5 text-gray-200">
+                <span class="sr-only">Close menu</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
+                  <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </div>
+            <div class="mt-6 flow-root">
+              <div class="-my-6 divide-y divide-white/10">
+                <div class="space-y-2 py-6">
+                  <a href="/" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Home</a>
+                  <a href="/forecast.html" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Weather Forecast</a>
+                  <a href="/about.html" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">About</a>
+                  <a href="/contact.html" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Contact Us</a>
+                </div>
+                <div class="py-6">
+                  <a href="#" id="Theme" class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-white hover:bg-white/5">Theme</a>
+                </div>
+              </div>
+            </div>
+          </el-dialog-panel>
+        </div>
+      </dialog>
+    </el-dialog>
+  </header>
+  <div class="mx-2 my-26 py-16 px-6 md:px-12 lg:p-40">
+  <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-start">
+    
+    <!-- Contact Form -->
+    <div>
+      <h2 class="text-3xl font-bold text-gray-100 mb-6">Contact Us</h2>
+      <form action="#" method="POST" class="space-y-4">
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-400">Name</label>
+          <input type="text" id="name" name="name" required
+            class="mt-1 block w-full rounded-lg border border-gray-300 p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-400">Email</label>
+          <input type="email" id="email" name="email" required
+            class="mt-1 block w-full rounded-lg border border-gray-100 p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+        </div>
+
+        <div>
+          <label for="message" class="block text-sm font-medium text-gray-400">Message</label>
+          <textarea id="message" name="message" rows="4" required
+            class="mt-1 block w-full rounded-lg border border-gray-300 p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"></textarea>
+        </div>
+
+        <button type="submit"
+          class="w-full md:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition">
+          Send Message
+        </button>
+      </form>
+    </div>
+
+    <!-- Contact Info -->
+    <div class="space-y-6">
+      <h2 class="text-3xl font-bold text-gray-100 mb-6">Get in Touch</h2>
+      <p class="text-gray-200">
+        Have questions, feedback, or need support? Reach out to us anytime!
+      </p>
+
+      <div class="space-y-3">
+        <p class="flex items-center text-gray-400">
+          📞 <span class="ml-2">+91 98765 43210</span>
+        </p>
+        <p class="flex items-center text-gray-400">
+          ✉️ <span class="ml-2">support@skycast.com</span>
+        </p>
+        <p class="flex items-center text-gray-400">
+          📍 <span class="ml-2">Chandigarh, India</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="bg-gray-800 text-gray-400 py-6">
+    <div class="max-w-7xl  mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <p class="text-sm">&copy; 2024 SkyCast. All rights reserved.</p>
+            <div class="mt-4 md:mt-0">
+                <a href="/" class="text-sm hover:text-white mx-2">Home</a>
+                <a href="/forecast.html" class="text-sm hover:text-white mx-2">Weather Forecast</a>
+                <a href="/about.html" class="text-sm hover:text-white mx-2">About</a>
+                <a href="/contact.html" class="text-sm hover:text-white mx-2">Contact Us</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    </div>
+    </body>
+</html>

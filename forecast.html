@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>SkyCast - Weather Forecast</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="css/weatherforecast.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div class="bg-gray-900 min-h-screen flex flex-col justify-between">
+      <!-- HEADER -->
+      <header class="absolute inset-x-0 top-0 z-50">
+        <nav aria-label="Global" class="flex items-center justify-between p-6 lg:px-8">
+          <div class="flex lg:flex-1">
+            <a href="/" class="-m-1.5 p-1.5">
+              <span class="sr-only">SkyCast</span>
+              <img src="https://imgs.search.brave.com/b_lwfe2ndckFu4G3V7Uca32H46oqdm7W58HqYJIxaqY/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsYXRpY29uLmNvbS8xMjgvMTg4OC8xODg4MjgyLnBuZw" alt="" class="h-8 w-auto" />
+            </a>
+          </div>
+          <div class="hidden lg:flex lg:gap-x-12">
+            <a href="/" class="text-sm font-semibold text-white">Home</a>
+            <a href="/forecast.html" class="text-sm font-semibold text-white">Weather Forecast</a>
+            <a href="/about.html" class="text-sm font-semibold text-white">About</a>
+            <a href="/contact.html" class="text-sm font-semibold text-white">Contact Us</a>
+          </div>
+        </nav>
+      </header>
+
+      <!-- SEARCH BAR -->
+      <div class="w-full p-36 bg-blue-600 text-white text-center shadow-md">
+        <div class="mt-4 flex justify-center space-x-2">
+          <input
+            type="text"
+            id="cityInput"
+            placeholder="Enter city name"
+            class="p-2 rounded-lg border border-gray-300 text-black w-64"
+          />
+          <button
+            id="getWeatherBtn"
+            onclick="GetWeather()"
+            class="bg-yellow-400 px-4 py-2 rounded-lg font-semibold hover:bg-yellow-500 active:scale-95 transition duration-200 shadow"
+          >
+            Get Weather
+          </button>
+        </div>
+      </div>
+
+      <!-- WEATHER CONTAINER -->
+      <main class="p-6 w-full max-w-3xl mx-auto">
+        <div id="weather-container" class="mt-6 space-y-6 text-center"></div>
+      </main>
+
+      <!-- FOOTER -->
+      <footer class="bg-gray-800 text-gray-400 py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p class="text-sm">&copy; 2024 SkyCast. All rights reserved.</p>
+          <div class="mt-4">
+            <a href="/" class="text-sm hover:text-white mx-2">Home</a>
+            <a href="/forecast.html" class="text-sm hover:text-white mx-2">Weather Forecast</a>
+            <a href="/about.html" class="text-sm hover:text-white mx-2">About</a>
+            <a href="/contact.html" class="text-sm hover:text-white mx-2">Contact Us</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      const weatherApiKey = "eb770a51efe892f2597ddd31b081a500"; // OpenWeather API
+      const geoApiKey = "865d8d1ccbd14d0ab2c62d0ca9201469"; // OpenCage API
+      const weatherContainer = document.getElementById("weather-container");
+
+      window.onload = function () {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(success, error);
+        } else {
+          getWeatherByCity("Chandigarh");
+        }
+      };
+
+      function success(position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+        const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${geoApiKey}`;
+        fetch(url)
+          .then((res) => res.json())
+          .then((data) => {
+            let city =
+              data.results[0]?.components?.city ||
+              data.results[0]?.components?.town ||
+              data.results[0]?.components?.village ||
+              "Chandigarh";
+            document.getElementById("cityInput").value = city;
+            getWeatherByCity(city);
+          })
+          .catch(() => getWeatherByCity("Chandigarh"));
+      }
+
+      function error() {
+        getWeatherByCity("Chandigarh");
+      }
+
+      function getWeatherByCity(city) {
+        const urlCurrent = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${weatherApiKey}&units=metric`;
+        const urlForecast = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${weatherApiKey}&units=metric`;
+
+        Promise.all([fetch(urlCurrent), fetch(urlForecast)])
+          .then(async ([resCurrent, resForecast]) => {
+            if (!resCurrent.ok || !resForecast.ok) throw new Error("City not found");
+            const dataCurrent = await resCurrent.json();
+            const dataForecast = await resForecast.json();
+            renderWeather(dataCurrent, dataForecast);
+          })
+          .catch((err) => {
+            weatherContainer.textContent = "";
+            const div = document.createElement("div");
+            div.className = "bg-red-100 text-red-700 p-4 rounded-lg";
+            div.textContent = err.message;
+            weatherContainer.appendChild(div);
+          });
+      }
+
+      function renderWeather(current, forecast) {
+        weatherContainer.textContent = "";
+
+        // Current weather big card
+        const currentCard = createWeatherCard(
+          `${current.name}, ${current.sys.country}`,
+          current.main.temp,
+          current.weather[0].description,
+          current.weather[0].icon,
+          current.main.humidity,
+          current.wind.speed,
+          "Now",
+          "big"
+        );
+        weatherContainer.appendChild(currentCard);
+
+        // Forecast container horizontal
+        const forecastContainer = document.createElement("div");
+        forecastContainer.className = "flex overflow-x-auto space-x-4 mt-4 pb-4";
+
+        const days = {};
+        forecast.list.forEach((entry) => {
+          const date = entry.dt_txt.split(" ")[0];
+          const time = entry.dt_txt.split(" ")[1];
+          if (time === "12:00:00" && !days[date]) {
+            days[date] = entry;
+          }
+        });
+
+        Object.keys(days)
+          .slice(0, 5)
+          .forEach((date) => {
+            const entry = days[date];
+            const forecastCard = createWeatherCard(
+              date,
+              entry.main.temp,
+              entry.weather[0].description,
+              entry.weather[0].icon,
+              entry.main.humidity,
+              entry.wind.speed,
+              "Forecast",
+              "small"
+            );
+            forecastContainer.appendChild(forecastCard);
+          });
+
+        weatherContainer.appendChild(forecastContainer);
+      }
+
+      function createWeatherCard(title, temp, desc, iconCode, humidity, wind, type, size = "big") {
+        const card = document.createElement("div");
+        card.className =
+          size === "big"
+            ? "bg-white shadow-lg rounded-2xl p-6 transform transition duration-500 hover:scale-105"
+            : "bg-white shadow-md rounded-xl p-4 w-40 flex-shrink-0 text-center";
+
+        const h2 = document.createElement("h2");
+        h2.className = size === "big" ? "text-2xl font-bold text-blue-700" : "text-lg font-bold text-blue-700";
+        h2.textContent = title;
+
+        const icon = document.createElement("img");
+        icon.src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+        icon.alt = desc;
+        icon.className = size === "big" ? "mx-auto" : "mx-auto w-16 h-16";
+
+        const pTemp = document.createElement("p");
+        pTemp.className = size === "big" ? "mt-2 text-lg" : "mt-1 text-sm";
+        pTemp.textContent = `🌡 ${temp} °C`;
+
+        const pDesc = document.createElement("p");
+        pDesc.className = size === "big" ? "mt-1 text-lg capitalize" : "mt-1 text-sm capitalize";
+        pDesc.textContent = `🌤 ${desc}`;
+
+        const pHum = document.createElement("p");
+        pHum.className = size === "big" ? "mt-1 text-lg" : "mt-1 text-sm";
+        pHum.textContent = `💧 ${humidity}%`;
+
+        const pWind = document.createElement("p");
+        pWind.className = size === "big" ? "mt-1 text-lg" : "mt-1 text-sm";
+        pWind.textContent = `🌬 ${wind} m/s`;
+
+        card.appendChild(h2);
+        card.appendChild(icon);
+        card.appendChild(pTemp);
+        card.appendChild(pDesc);
+        card.appendChild(pHum);
+        card.appendChild(pWind);
+
+        return card;
+      }
+
+      function GetWeather() {
+        const city = document.getElementById("cityInput").value.trim();
+        if (!city) {
+          alert("Please enter a city name!");
+          return;
+        }
+        getWeatherByCity(city);
+      }
+    </script>
+  </body>
+</html>
